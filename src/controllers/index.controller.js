@@ -10,7 +10,13 @@ const pool = new Pool({
 const getUsers = async (req, res) => {
     const response = await pool.query('SELECT * FROM users');
     res.status(200).json(response.rows);
-}
+};
+
+const getUserById = async (req, res) => {
+    const id =req.params.id;
+    const response = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    res.json(response.rows);
+};
 
 const postUser = async (req, res) => {
     const {name, email} = req.body;
@@ -23,9 +29,28 @@ const postUser = async (req, res) => {
             user:{name,email}
         }
     })
+};
+
+const updateUser = async (req, res) => {
+    const id = req.params.id;
+    const {name, email} = req.body;
+    const response = await pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [name, email, id]);
+    console.log(response);
+    res.json('User updated succesfuly');
 }
+
+const deleteUser = async(req, res) => {
+    const id = req.params.id;
+    const response = await pool.query('DELETE FROM users  WHERE id = $1', [id]);
+    console.log(response);
+    res.json(`User ${id} has been deleted succesfully`);
+};
+
 
 module.exports = {
     getUsers,
-    postUser
+    postUser,
+    getUserById,
+    deleteUser,
+    updateUser
 }
