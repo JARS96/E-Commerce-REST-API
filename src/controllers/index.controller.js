@@ -2,7 +2,7 @@ const {Pool} = require('pg');
 const pool = new Pool({
     host: 'localhost',
     user: 'postgres',
-    password:'password',
+    password:'postgres',
     database: 'testapi',
     port: '5432'
 });
@@ -37,7 +37,7 @@ const updateUser = async (req, res) => {
     const response = await pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [name, email, id]);
     console.log(response);
     res.json('User updated succesfuly');
-}
+};
 
 const deleteUser = async(req, res) => {
     const id = req.params.id;
@@ -46,11 +46,19 @@ const deleteUser = async(req, res) => {
     res.json(`User ${id} has been deleted succesfully`);
 };
 
+const loginUser = async(req, res) => {
+    let userName = req.body.username;
+    let password = req.body.password;
+
+    res.send(`Username: ${username} Password:${password}`);
+};
+
 
 module.exports = {
     getUsers,
     postUser,
     getUserById,
     deleteUser,
-    updateUser
+    updateUser,
+    loginUser
 }
