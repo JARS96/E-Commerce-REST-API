@@ -15,10 +15,14 @@ CREATE TABLE products(
     price VARCHAR(50)
 );
 
+--instertar columna password a tabla users
+ ALTER TABLE users ADD COLUMN password VARCHAR;
+ ALTER TABLE users ALTER COLUMN password DROP NOT NULL;
+
 --insertar 2 usuarios de prueba
-INSERT INTO users (name, email) VALUES
-    ('user1', 'user1@user.com'),
-    ('user2', 'user2@user.com');
+INSERT INTO users (name, email, password) VALUES
+    ('user1', 'user1@user.com', 'qwerty'),
+    ('user2', 'user2@user.com', 'asdfg');
 
 --insertar 2 productos de prueba
 INSERT INTO products (name, description, price) VALUES

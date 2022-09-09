@@ -1,4 +1,6 @@
 const {Pool} = require('pg');
+const validateForm = require('./controllers/validateForm');
+
 const pool = new Pool({
     host: 'localhost',
     user: 'postgres',
@@ -19,9 +21,9 @@ const getUserById = async (req, res) => {
 };
 
 const postUser = async (req, res) => {
-    const {name, email} = req.body;
+    const {name, email, password} = req.body;
 
-    const response = await pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email]);
+    const response = await pool.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3)', [name, email, password]);
     console.log(response);
     res.json({
         message: 'User has been created succesfuly',
@@ -33,8 +35,8 @@ const postUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const id = req.params.id;
-    const {name, email} = req.body;
-    const response = await pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [name, email, id]);
+    const {name, email, password} = req.body;
+    const response = await pool.query('UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4', [name, email, password, id]);
     console.log(response);
     res.json('User updated succesfuly');
 };
@@ -47,11 +49,12 @@ const deleteUser = async(req, res) => {
 };
 
 const loginUser = async(req, res) => {
-    let userName = req.body.username;
-    let password = req.body.password;
-
-    res.send(`Username: ${username} Password:${password}`);
+    validateForm(req, res);
 };
+
+const signupUser = (req, res) => {
+    validateForm(req, res);
+}
 
 
 module.exports = {
@@ -60,5 +63,6 @@ module.exports = {
     getUserById,
     deleteUser,
     updateUser,
-    loginUser
+    loginUser,
+    signupUser
 }
